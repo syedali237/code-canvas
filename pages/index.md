@@ -1,7 +1,4 @@
-# Welcome to my site
+# CODE CANVAS
 
-### This is fancy
-
-This is written in markdown
-
-Check out [this markdown page](?test)
+### First Steps in Open Source: My Experience with a Successful PR Merge
+Check out [my first blog](?my-first-pr)

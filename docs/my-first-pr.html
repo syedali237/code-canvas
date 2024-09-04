@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width, minimal-ui, initial-scale=1, viewport-fit=cover">
+        <title>First Steps in Open Source: My Experience with a Successful PR Merge</title>
+        <link rel="icon" type="image/png" href="assets/images/favicon.png">
+        <link href="assets/css/main.css" rel="stylesheet">
+    </head>
+    <body>
+        <h1 id="first-steps-in-open-source-my-experience-with-a-successful-pr-merge">First Steps in Open Source: My Experience with a Successful PR Merge</h1>
+<p>By <strong><em>Syed Ali Ul Hasan</em></strong> | 01 September 2024</p>
+<h3 id="introduction">Introduction</h3>
+<p>Contributing to open source can be a significant milestone for any developer, offering a chance to engage with real-world projects and collaborate with a global community. For me, it has been a journey of growth, learning, and accomplishment. This blog post documents my experience with my first pull request (PR) being successfully merged into an open-source project, outlining the technical challenges encountered, the steps taken to address them, and the process of getting my PR accepted.</p>
+<hr>
+<h3 id="the-spark-an-open-source-conference">The Spark: An Open Source Conference</h3>
+<p>My journey began when I attended an open-source conference at IIT Kanpur with a few friends. It was here that I realized just how vast and vibrant the open-source community is. The discussions, the people, and the sheer potential intrigued me. Encouraged by a friend, I decided to explore some reputable open-source organizations. One name that stood out was the Palisadoes Foundation, and this is where my story begins.</p>
+<hr>
+<h3 id="about-the-project">About the Project</h3>
+<p>The <strong>Palisadoes Foundation</strong> is a non-profit organization focused on empowering underrepresented communities, particularly in the Caribbean, through technology education and resources. One of its key projects is <strong>Talawa</strong>, an open source project to help community-based organizations such as clubs, neighborhood groups, volunteer associations, non-profits and small religious institutions manage their daily activities. Most user interaction is via a mobile app.</p>
+<p>By contributing to the Talawa API, developers support a project that has a real-world impact on community organizations and aligns with the foundation&#39;s mission of promoting inclusivity in technology.</p>
+<hr>
+<h3 id="the-issue">The Issue</h3>
+<p>During the conference, I started looking into the unassigned issues in the Talawa API repository and requested to be assigned to one. A couple of days later, I was assigned my first issue: <strong>Test Run time was too long (#2236)</strong>. The project was using Vitest for testing, and the test execution time was far from optimal.</p>
+<p>Initially, the complexity of the task felt overwhelming. I remember staring at the issue description, a mix of excitement and apprehension coursing through me. I was unsure if I could handle it, but I was also excited by the challenge. I decided to dive deep into the codebase, determined to find a solution.</p>
+<hr>
+<h3 id="understanding-the-codebase">Understanding the Codebase</h3>
+<p>Familiarizing myself with the codebase was the first hurdle. The project was extensive, and understanding the intricacies of the testing setup took time. I spent hours reading through documentation, exploring the code, and gathering any help I could find online. This phase was critical in building the confidence I needed to tackle the issue.</p>
+<hr>
+<h3 id="implementing-the-solution">Implementing the Solution</h3>
+<p>After gaining a good understanding of the codebase, I identified the key areas that needed modification. The existing setup used the following command to run tests:</p>
+<pre><code class="json">"<span class="hljs-selector-tag">test</span>": "<span class="hljs-selector-tag">vitest</span> <span class="hljs-selector-tag">run</span> <span class="hljs-selector-tag">--pool</span> <span class="hljs-selector-tag">forks</span> <span class="hljs-selector-tag">--poolOptions</span><span class="hljs-selector-class">.forks</span><span class="hljs-selector-class">.singleFork</span> <span class="hljs-selector-tag">--coverage</span>"</code></pre>
+<p>This configuration was suboptimal, leading to long test run times. After careful consideration, I proposed changing it to:</p>
+<pre><code class="json"><span class="hljs-string">"test"</span>: <span class="hljs-string">"vitest run --pool=threads --no-file-parallelism --coverage"</span></code></pre>
+<p>This change introduced test parallelism, significantly reducing the CI time. </p>
+<ul>
+<li>It reduced the test runtime from <strong>20 minutes</strong> to <strong>under 5 minutes</strong>.</li>
+</ul>
+<p>The key to this improvement was the use of thread-based parallelism (<code>--pool=threads</code>). This allows multiple tests to run concurrently, utilizing the available CPU cores more efficiently. However, to prevent potential race conditions, I also included the <code>--no-file-parallelism</code> flag, ensuring that tests within the same file run sequentially.</p>
+<hr>
+<h3 id="submitting-the-pull-request">Submitting the Pull Request</h3>
+<p>With the solution in place, I submitted my first pull request: <strong>ci: add parallelism to reduce tests CI time (#2490)</strong>. </p>
+<p>The PR was reviewed promptly, but I was asked to provide videos showing the before and after effects of my changes. This request made me nervous - I hadn&#39;t anticipated needing to provide such detailed evidence. However, I understood the importance of demonstrating the impact of my changes clearly.</p>
+<p>Additionally, a reviewer pointed out a potential issue: while parallelism could speed up tests, it might also introduce race conditions, making some tests flaky. This feedback was eye-opening, showing me the complexities involved in optimizing test performance.</p>
+<hr>
+<h3 id="challenges-and-learnings">Challenges and Learnings</h3>
+<p>Through this process, I learned several important lessons:</p>
+<ul>
+<li>While parallelism can improve performance, it requires careful consideration to avoid issues like race conditions.</li>
+<li>Tests that depend on the same database information could conflict when run in parallel.</li>
+<li>The reviewer suggested grouping tests based on thread affinity to mitigate this risk.</li>
+</ul>
+<p>I was also asked to raise a new issue to address this concern, which I did: <strong>Group Tests Based on Thread Affinity - Follow-up to Issue #2236 (#2491)</strong>. This marked my first-ever issue raised on GitHub, adding another milestone to my open-source journey.</p>
+<hr>
+<h3 id="the-merge">The Merge</h3>
+<p>Finally, after addressing the feedback and making the necessary adjustments, my PR was merged. Seeing my contribution accepted into the codebase was immensely satisfying. It validated the effort I had put in and motivated me to continue contributing to open source. I remember the moment I saw the &quot;Merged&quot; status - it felt like a significant achievement, a tangible result of my hard work and learning.</p>
+<hr>
+<h3 id="conclusion">Conclusion</h3>
+<p>This experience provided valuable insights into the open-source development process. It showed me the importance of careful coding, thorough testing, and clear communication in a collaborative environment. Contributing to an open-source project was a learning opportunity that expanded my understanding of software development practices.</p>
+<p>While this was just a small step, it gave me a glimpse into the vast world of open-source development. I look forward to continuing to learn and potentially contribute to more projects in the future.</p>
+<p>If you&#39;re considering your first steps into open source, here are a few tips based on my experience:</p>
+<ol>
+<li>Start small: Look for &quot;good first issue&quot; labels in repositories.</li>
+<li>Don&#39;t be afraid to ask questions: The community is often very supportive of newcomers.</li>
+<li>Be patient and persistent: Understanding a new codebase takes time.</li>
+<li>Learn from feedback: Code reviews are invaluable learning opportunities.</li>
+<li>Document your process: It helps others and solidifies your own understanding.</li>
+</ol>
+<p>Remember, every contribution, no matter how small, can be valuable. If you&#39;re interested in open source, give it a try – you might be surprised by what you learn.</p>
+<hr>
+
+    </body>
+</html>
